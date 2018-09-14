@@ -6,7 +6,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.sql.DataSource;
 
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -15,11 +17,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginSuccessHandler successHandler;
 
     @Autowired
-    public void configurer(AuthenticationManagerBuilder auth) throws Exception {
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
+    private BCryptPasswordEncoder passwordEncoder;
 
-        auth.inMemoryAuthentication().withUser(users.username("admin").password("admin").roles("USER", "ADMIN"))
-                .withUser(users.username("user").password("user").roles("USER"));
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    public void configurer(AuthenticationManagerBuilder auth) throws Exception {
+//        User.UserBuilder users = User.withDefaultPasswordEncoder();
+
+
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
+                .usersByUsernameQuery("select username,password,enabled from usr_users where username=?")
+                .authoritiesByUsernameQuery("select u.username, a.name from usr_roles a "
+                        + "inner join usr_users u on a.user_id = u.id where u.username=?");
     }
 
     protected void configure(HttpSecurity http) throws Exception {

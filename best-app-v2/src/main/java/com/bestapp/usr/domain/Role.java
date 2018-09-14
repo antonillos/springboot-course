@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "MGR_ROLE")
+@Table(name = "USR_ROLES", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

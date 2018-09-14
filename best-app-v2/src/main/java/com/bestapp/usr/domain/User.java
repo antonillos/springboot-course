@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "MGR_USER")
+@Table(name = "USR_USERS")
 public class User implements Serializable {
 
     @Id
@@ -14,6 +14,7 @@ public class User implements Serializable {
     private Long id;
 
     @NotEmpty
+    @Column(name = "username", unique = true)
     private String userName;
 
     @NotEmpty
