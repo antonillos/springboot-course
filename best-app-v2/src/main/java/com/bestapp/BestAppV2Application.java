@@ -1,4 +1,4 @@
-package com.bestapp.mgr;
+package com.bestapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

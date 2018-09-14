@@ -1,4 +1,4 @@
-package com.bestapp.mgr.domain;
+package com.bestapp.usr.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
