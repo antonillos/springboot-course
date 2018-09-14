@@ -7,6 +7,9 @@
 
 <h1>BetsApp Login</h1>
 
+<div th:if="${success != null}" th:text="${success}"></div>
+<div th:if="${error != null}" th:text="${error}"></div>
+
 <form th:action="@{/login}" method="post">
     <div>
         <input type="text" name="username" id="username" />
