@@ -6,6 +6,7 @@ import com.bestapp.mgr.repository.MatchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 
 
 @Controller
+@Secured("ROLE_ADMIN")
 public class MatchController {
 
     private static final Logger log = LoggerFactory.getLogger(MatchController.class);
@@ -24,6 +26,7 @@ public class MatchController {
     @Autowired
     private MatchRepository repository;
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String findAll(Model model) {
         model.addAttribute("matches", repository.findAll());
