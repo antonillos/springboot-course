@@ -35,11 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().disable();
+
         http.authorizeRequests()
                 .antMatchers("/static/**").permitAll()
+                .antMatchers("/error/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
                 .and().formLogin().successHandler(successHandler).loginPage("/login").permitAll()
                 .and().logout().permitAll()
                 .and().exceptionHandling()
         .accessDeniedPage("/403");
+
     }
 }
