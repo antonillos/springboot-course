@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 
 @Controller
@@ -73,11 +74,11 @@ public class MatchController {
     private void setWinner(Long id, MatchResult winner) {
         if (id == null)
             return;
-        Match match = repository.findById(id);
-        if (match == null)
+        Optional<Match> match = repository.findById(id);
+        if (!match.isPresent())
             return;
-        match.setResult(winner);
-        repository.saveOrUpdate(match);
+        match.get().setResult(winner);
+        repository.saveOrUpdate(match.get());
     }
 
 }

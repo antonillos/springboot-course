@@ -11,17 +11,19 @@ import java.util.List;
 
 @Component
 @Mapper(componentModel = "spring")
-public class UserBetMapper {
+public interface UserBetMapper {
     @Mappings({
             @Mapping(source = "user.id", target = "user"),
             @Mapping(source = "match.id", target = "match")
     })
-    public UserBetDTO toDTO(UserBet userBet) {
-        return null;
-    };
+    UserBetDTO toDTO(UserBet userBet);
 
-    public List<UserBetDTO> toDTO(List<UserBet> userBets) {
-        return null;
-    };
+    List<UserBetDTO> toDTO(List<UserBet> userBets);
+
+    @Mappings({
+            @Mapping(source = "user", target = "user.id"),
+            @Mapping(source = "match", target = "match.id")
+    })
+    UserBet toEntity(UserBetDTO userBetDTO);
 
 }
