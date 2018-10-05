@@ -2,6 +2,7 @@ package com.bestapp.bets.service;
 
 import com.bestapp.UserBetMapper;
 import com.bestapp.bets.domain.UserBet;
+import com.bestapp.bets.exceptions.NotFoundException;
 import com.bestapp.bets.repository.UserBetRepository;
 import com.bestapp.mgr.domain.Match;
 import com.bestapp.mgr.repository.MatchRepository;
@@ -36,10 +37,10 @@ public class UserBetService {
     public UserBetDTO create(UserBetDTO userBetDTO) {
 
         Optional<User> user = userRepository.findById(userBetDTO.getUser());
-        user.orElseThrow(() -> new Error("User not found!!"));
+        user.orElseThrow(() -> new NotFoundException("User not found!!"));
 
         Optional<Match> match = matchRepository.findById(userBetDTO.getMatch());
-        match.orElseThrow(() -> new Error("Match not found!!"));
+        match.orElseThrow(() -> new NotFoundException("Match not found!!"));
 
         UserBet userBet = userBetMapper.toEntity(userBetDTO);
         userBet.setCreated(LocalDateTime.now());
@@ -47,5 +48,12 @@ public class UserBetService {
         userBetRepository.save(userBet);
 
         return userBetMapper.toDTO(userBet);
+    }
+
+    public UserBetDTO findById(Long id) {
+        Optional<UserBet> userBet = userBetRepository.findById(id);
+
+        userBet.orElseThrow(() -> new NotFoundException("User not found!!"));
+        return userBetMapper.toDTO(userBet.get());
     }
 }
