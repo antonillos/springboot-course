@@ -5,6 +5,7 @@ import com.bestapp.mgr.domain.MatchResult;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.StringJoiner;
 
 public class UserBetDTO implements Serializable {
 
@@ -63,5 +64,14 @@ public class UserBetDTO implements Serializable {
         this.amount = amount;
     }
 
+    @Override public String toString() {
+        return new StringJoiner(", ", UserBetDTO.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("user=" + user)
+                .add("match=" + match)
+                .add("result=" + result)
+                .add("amount=" + amount)
+                .toString();
+    }
 }
 

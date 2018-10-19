@@ -1,7 +1,9 @@
 package com.bestapp.bets.web;
 
+import com.bestapp.MessagingConfig;
 import com.bestapp.bets.service.UserBetDTO;
 import com.bestapp.bets.service.UserBetService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -19,6 +21,9 @@ public class UserBetResource {
     private final UserBetService userBetService;
 
     @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
     public UserBetResource(UserBetService userBetService) {
         this.userBetService = userBetService;
     }
@@ -27,6 +32,7 @@ public class UserBetResource {
     public List<UserBetDTO> findAll() {
         return userBetService.findAll();
     }
+/*
 
     @PostMapping(value = "/user-bets")
     public ResponseEntity<UserBetDTO> create(@Valid @RequestBody UserBetDTO userBetDTO) {
@@ -37,6 +43,18 @@ public class UserBetResource {
                 .buildAndExpand(dto.getId()).toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+*/
+
+    @PostMapping(value = "/users/bets")
+    public ResponseEntity<UserBetDTO> accept(@Valid @RequestBody UserBetDTO userBetDTO) {
+
+        rabbitTemplate.convertAndSend(MessagingConfig.exchangeName, "new.bet", userBetDTO.toString());
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}/processed")
+                .buildAndExpand(userBetDTO.getUser()).toUri();
+
+        return ResponseEntity.accepted().location(uri).build();
     }
 
     @GetMapping(value = "/user-bets/{id}")

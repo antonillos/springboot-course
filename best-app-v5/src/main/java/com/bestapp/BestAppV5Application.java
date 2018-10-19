@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BestAppV4Application {
+public class BestAppV5Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(BestAppV4Application.class, args);
+        SpringApplication.run(BestAppV5Application.class, args);
     }
 }
