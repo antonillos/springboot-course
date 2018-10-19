@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<h1>BetsApp</h1>
+
+<p sec:authorize="isAuthenticated()">
+    User: <span sec:authentication="name"></span> | Roles: <span sec:authentication="principal.authorities"></span>
+</p>
+
+<div th:if="${matches.isEmpty()}">
+    No results
+</div>
+<a href="/form">Add</a>
+
+<div th:if="${!matches.isEmpty()}">
+
+    <table border="1">
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Local</td>
+            <td>Relation</td>
+            <td>Visitor</td>
+            <td>Relation</td>
+            <td>Draw</td>
+            <td>Open</td>
+            <td>Close</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="b: ${matches}">
+            <td th:text="${b.id}"></td>
+            <td th:text="${b.local}"></td>
+            <td class="highl">
+                <a th:href="@{/local/} + ${b.id}" th:text="'1/' + ${b.relLocal}"></a>
+            </td>
+            <td th:text="${b.visitor}"></td>
+            <td>
+                <a th:href="@{/visitor/} + ${b.id}" th:text="'1/' + ${b.relVisitor}"></a>
+            </td>
+            <td>
+                <a th:href="@{/draw/} + ${b.id}" th:text="'1/' + ${b.relDraw}"></a>
+            </td>
+            <td th:text="${#temporals.format(b.open,'dd/MM HH:mm')}"></td>
+            <td th:text="${#temporals.format(b.close,'dd/MM HH:mm')}"></td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<div>
+    <form th:action="@{/logout}" method="post">
+        <button class="dropdown-item" type="submit">Logout</button>
+    </form>
+</div>
+
+</html>
