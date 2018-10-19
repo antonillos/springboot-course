@@ -5,11 +5,12 @@ import com.bestapp.bets.service.UserBetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,13 +30,20 @@ public class UserBetResource {
 
     @PostMapping(value = "/user-bets")
     public ResponseEntity<UserBetDTO> create(@Valid @RequestBody UserBetDTO userBetDTO) {
-        return new ResponseEntity<>(userBetService.create(userBetDTO), HttpStatus.CREATED);
+        UserBetDTO dto = userBetService.create(userBetDTO);
+
+        // HATEOAS
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping(value = "/user-bets/{id}")
     public Resource<UserBetDTO> findById(@PathVariable("id") Long id) {
         UserBetDTO userBetDTO = userBetService.findById(id);
 
+        // HATEOAS
         ControllerLinkBuilder linkBuilder =
                 ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(this.getClass()).findAll());
 
